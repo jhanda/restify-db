@@ -1,14 +1,21 @@
-var mysql = require('mysql')
+var mysql = require('mysql');
 
-var salesforce = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : ''
-});
 
-var databases = new Object();
+var state = {
+	pool: null
+};
 
-databases.salesforce = salesforce;
+exports.connect = function(done) {
+	state.pool = mysql.createPool({
+		host: 'localhost',
+		user: '',
+		password: '',
+		database: ''
+	});
 
-module.exports = databases;
+	done();
+}
+
+exports.get = function() {
+	return state.pool;
+}
