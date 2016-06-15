@@ -1,6 +1,6 @@
 // Dependencies
 var request     = require ('request');
-var databases   = require ('app/lib/db.js')
+var databases   = require ('./lib/db.js');
 
 var salesforce = databases.salesforce;
 
