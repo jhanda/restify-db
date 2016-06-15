@@ -10,4 +10,6 @@ mysql.createConnection({
 	connection = conn;
 });
 
-exports.connection = connection;
+exports.get = function() {
+	return connection;
+}
