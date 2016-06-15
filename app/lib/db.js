@@ -7,10 +7,10 @@ var state = {
 
 exports.connect = function(done) {
 	state.pool = mysql.createPool({
-		host: 'localhost',
-		user: '',
-		password: '',
-		database: ''
+		host: 'lrdcom-vm-150',
+		user: 'liferay',
+		password: '84v0s1qF5968Pnd',
+		database: 'salesforce'
 	});
 
 	done();
