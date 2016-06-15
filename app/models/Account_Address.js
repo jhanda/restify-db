@@ -1,15 +1,23 @@
-var getAddress = function(req, res) {
-	var id_ = req.params.id;
+var db   = require ('../lib/db.js');
 
-	// select * from Account_Address__c where Id_ like '00170000018AlB0%';
+var getAddress = function(addressId, done) {
+	db.connect(function(){
+		var connection = db.get();
+
+		connection.query('select * from Account_Address__c where Id_ like \'' + addressId + '%\'', function (err, rows) {
+			done(null, rows);
+		});
+	});
 };
 
-var getAddresses = function (req, res) {
-    var accountId = req.params.id;
-	var orderByCol = req.params.orderByCol;
-	var orderByColSort = req.params.orderByColSort;
-	var start = req.params.start;
-	var end = req.params.end;
+exports.getAddresses = function (accountId, offset, limit, done) {
+	db.connect(function(){
+		var values = [offset, limit];
 
-    // select * from Account_Address__c where Account__c like '00170000018AlB0%' order by id_ LIMIT 1,5;
+		var connection = db.get();
+
+		connection.query('select * from Account_Address__c where Account__c like \'' + accountId + '%\' LIMIT ' + offset + ', ' + limit, function (err, rows) {
+			done(null, rows);
+		});
+	});
 };
