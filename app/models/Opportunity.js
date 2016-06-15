@@ -1,14 +1,18 @@
-var getOpportunity = function(req, res) {
-    var id_ = req.params.id;
+var db   = require ('../lib/db.js')
+var Account     = require ('./Account');
 
-    // select * from Opportunity where Id_ like '0067000000AN3jTAAT%';
+exports.getById = function(opportunityId, done) {
+    var connection = db.get();
+
+	connection.query('SELECT o.Name, o.description FROM Opportunity o WHERE o.Id_ = ?', opportunityId).then(function(rows){
+		done(null, rows);
+	});
 };
 
-var getOpportunities = function (req, res) {
-    var orderByCol = req.params.orderByCol;
-    var orderByColSort = req.params.orderByColSort;
-    var start = req.params.start;
-    var end = req.params.end;
+exports.getOpportunities = function(accountId, done) {
+    var connection = db.get();
 
-    // select * from Opportunity order by Id_ LIMIT 1,5;
-};
+	connection.query('SELECT o.Name, o.description FROM Opportunity o WHERE o.AccountId = ?', accountId).then(function(rows){
+		done(null, rows);
+	})
+}

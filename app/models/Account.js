@@ -1,7 +1,9 @@
 var db   = require ('../lib/db.js')
 var Account_Address = require('./Account_Address');
+var Opportunity = require('./Opportunity');
 
 exports.getById = function(accountId, expand, done) {
+
 	var connection = db.get();
 
 	var sqlQuery = 'SELECT a.Id_, \
@@ -28,9 +30,17 @@ exports.getById = function(accountId, expand, done) {
 		//Assume a valid account is returned, get addresses for that account
 		var account = rows[0];
 		Account_Address.getAddresses(account.Id_, 0, 100, function(err, data){
-			if (expand && expand.includes('addresses')) {
-				account["addresses"] = data;
-			}
+            if (expand && expand.includes('addresses')) {
+                account["addresses"] = data;
+            }
+		});
+
+        return account;
+	}).then(function(account){
+		Opportunity.getOpportunities(account.Id_, function(err, data){
+            if (expand && expand.includes('opportunities')) {
+                account["opportunities"] = data;
+            }
 
 			done (null, account);
 		});
