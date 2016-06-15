@@ -1,26 +1,22 @@
 var db   = require ('../lib/db.js')
-
+var Account_Address = require('./Account_Address');
 
 exports.getById = function(accountId, done) {
+
 	var connection = db.get();
 
-	connection.query('SELECT a.Name, \
-							 a.Description, \
-							 a.NumberOfEmployees, \
-							 a.Website, \
-							 CONCAT(u.FirstName, " ", u.LastName) as ownerfullName, \
-							 u.email as ownerEmailAddress \
+	var sqlQuery = 'SELECT a.Id_, \
+						a.Name, \
+						a.Description, \
+						a.NumberOfEmployees, \
+						a.Website, \
+						CONCAT(u.FirstName, " ", u.LastName) as ownerfullName, \
+						u.email as ownerEmailAddress \
 					 FROM Account_ a \
 					 INNER JOIN User_ u on a.OwnerId = u.Id_ \
-					 WHERE a.Id_ = ?', accountId, function (err, rows) {
+					 WHERE a.Id_ = "' + accountId + '"';
 
-		//If error, send it back
-		if(err){
-			err['httpErrorCode'] = "400";
-			err['httpErrorMessage'] = "Error requesting data";
-			console.log(err);
-			done(err,null);
-		}
+	connection.query(sqlQuery).then(function(rows){
 
 		//No error, make sure at least 1 result found
 		if(rows.length < 1){
@@ -30,7 +26,11 @@ exports.getById = function(accountId, done) {
 			done(err,null);
 		}
 
-		//If no error, check for validity
-		done(null, rows[0]);
+		//Assume a valid account is returned, get addresses for that account
+		var account = rows[0];
+		Account_Address.getAddresses(account.Id_, 0, 100, function(err, data){
+			account["addresses"] = data;
+			done (null, account);
+		});
 	});
 };
