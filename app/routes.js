@@ -17,7 +17,14 @@ module.exports = function(app) {
             res.statusCode = 400
             res.send({error:'You must supply both offset and limit parameters'});
         }else{
-            res.send('Here\'s your accounts');
+            Account.getAll(offset, limit, keyword, function(error, results){
+            if(error) {
+                res.statusCode = error.httpErrorCode;
+                res.send(error.httpErrorMessage);
+            }else{
+                res.send(results);    
+            }
+        });
         }
 
         

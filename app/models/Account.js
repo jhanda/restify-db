@@ -36,3 +36,33 @@ exports.getById = function(accountId, expand, done) {
 		});
 	});
 };
+
+exports.getAll = function(offset, limit, keyword, done) {
+
+	var connection = db.get();
+
+	var sqlQuery = 'SELECT a.Id_, \
+						a.Name, \
+						a.Description, \
+						a.NumberOfEmployees, \
+						a.Website, \
+						CONCAT(u.FirstName, " ", u.LastName) as ownerfullName, \
+						u.email as ownerEmailAddress \
+					 FROM Account_ a \
+					 INNER JOIN User_ u on a.OwnerId = u.Id_ \
+					 LIMIT ' + offset + ',' + limit;
+
+	connection.query(sqlQuery).then(function(rows){
+		
+		for (var i = 0; i<rows.length; i++){		
+			accountId = rows[i].Id_;
+			console.log("Getting addresses for " + accountId);
+			//Account_Address.getAddresses(accountId, 0, 100, function(err, data){
+			//	rows[i].addresses = data;
+			//	console.log(rows[i]);
+			//});	
+		}
+		
+		done (null, rows);
+	});
+};
