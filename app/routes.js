@@ -1,5 +1,8 @@
 // Dependencies
-var request     = require ('request');  
+var request     = require ('request');
+var databases   = require ('app/lib/db.js')
+
+var salesforce = databases.salesforce;
 
 // Opens App Routes
 module.exports = function(app) {
