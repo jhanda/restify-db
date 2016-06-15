@@ -1,21 +1,13 @@
-var mysql = require('mysql');
+var mysql = require('promise-mysql');
+var connection;
 
+mysql.createConnection({
+	host: 'localhost',
+	user: '',
+	password: '',
+	database: ''
+}).then(function(conn){
+	connection = conn;
+});
 
-var state = {
-	pool: null
-};
-
-exports.connect = function(done) {
-	state.pool = mysql.createPool({
-		host: 'localhost',
-		user: '',
-		password: '',
-		database: ''
-	});
-
-	done();
-}
-
-exports.get = function() {
-	return state.pool;
-}
+exports.connection = connection;
