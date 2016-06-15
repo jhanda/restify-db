@@ -24,11 +24,12 @@ module.exports = function(app) {
     });
 
     app.get('/accounts/:id', function(req, res) {
-
         var accountId = req.params.id;
+        var expand = req.query.expand;
+
         console.log('Getting account data for ' + accountId);
         //Getting all accounts
-        Account.getById(accountId, function(error, results){
+        Account.getById(accountId, expand, function(error, results){
             if(error) {
                 res.statusCode = error.httpErrorCode;
                 res.send(error.httpErrorMessage);
